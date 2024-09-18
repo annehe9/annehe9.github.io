@@ -160,9 +160,9 @@ window.addEventListener('dblclick', () =>
 window.addEventListener("deviceorientation", handleOrientation, true);
 function handleOrientation(event) {
     const absolute = event.absolute;
-    const alpha = event.alpha;
-    const beta = event.beta;
-    const gamma = event.gamma;
+    const alpha = event.alpha*Math.PI/180;
+    const beta = event.beta*Math.PI/180;
+    const gamma = event.gamma*Math.PI/180;
   
    camera.setRotationFromAxisAngle((0,0,1), gamma);
    camera.setRotationFromAxisAngle((0,1,0), beta);
