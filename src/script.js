@@ -40,10 +40,12 @@ const axesHelper = new THREE.AxesHelper(10);
 axesHelper.position.z = -5
 scene.add(axesHelper);
 
+/*
 // WebXR
 renderer.xr.enabled = true;
 document.body.appendChild(renderer.domElement);
 document.body.appendChild(VRButton.createButton(renderer));
+*/
 
 // Create meshes
 const meshes = new THREE.Group();
@@ -154,13 +156,15 @@ window.addEventListener('dblclick', () =>
     }
 })
 
-async function start() {
-    navigator.xr.requestSession('inline');
-    // Check if browser supports WebXR with "immersive-ar".
-    //const immersiveArSupported = await browserHasImmersiveArCompatibility();
-    
-    // Initialize app if supported.
-    //immersiveArSupported ?
-    //  initializeXRApp() : 
-    //  displayUnsupportedBrowserMessage();
-  };
+// Device Orientation
+window.addEventListener("deviceorientation", handleOrientation, true);
+function handleOrientation(event) {
+    const absolute = event.absolute;
+    const alpha = event.alpha;
+    const beta = event.beta;
+    const gamma = event.gamma;
+  
+   camera.setRotationFromAxisAngle((0,0,1), gamma);
+   camera.setRotationFromAxisAngle((0,1,0), beta);
+   controls.update();
+  }
