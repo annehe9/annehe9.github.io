@@ -166,5 +166,6 @@ function handleOrientation(event) {
   
    camera.setRotationFromAxisAngle((0,0,1), gamma);
    camera.setRotationFromAxisAngle((0,1,0), beta);
+   camera.updateProjectionMatrix();
    controls.update();
   }
