@@ -155,11 +155,12 @@ window.addEventListener('dblclick', () =>
 })
 
 async function start() {
+    navigator.xr.requestSession('inline');
     // Check if browser supports WebXR with "immersive-ar".
-    const immersiveArSupported = await browserHasImmersiveArCompatibility();
+    //const immersiveArSupported = await browserHasImmersiveArCompatibility();
     
     // Initialize app if supported.
-    immersiveArSupported ?
-      initializeXRApp() : 
-      displayUnsupportedBrowserMessage();
+    //immersiveArSupported ?
+    //  initializeXRApp() : 
+    //  displayUnsupportedBrowserMessage();
   };
