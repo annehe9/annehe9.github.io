@@ -47,6 +47,34 @@ document.body.appendChild(renderer.domElement);
 document.body.appendChild(VRButton.createButton(renderer));
 */
 
+// Start up an inline session, which should always be supported on
+// browsers that support WebXR regardless of the available hardware.
+let inlineSession = null;
+const fov = document.getElementById('vertFOV');
+navigator.xr.requestSession('inline').then((session) => {
+      inlineSession = session;
+      //renderer.context.makeXRCompatible();
+      const glLayer = new XRWebGLLayer(inlineSession, renderer.getContext());
+      inlineSession.updateRenderState({baseLayer: glLayer});
+      inlineSession.requestReferenceSpace('viewer');
+      updateFov();
+    });
+
+function updateFov() {
+    if (fov) {
+        let value = parseFloat(fov.value);
+    // The inlineVerticalFieldOfView is specified in radians.
+    let radValue = value * (Math.PI / 180);
+    inlineSession.updateRenderState({
+        inlineVerticalFieldOfView: radValue
+    });
+    }
+}
+if (fov) {
+    fov.addEventListener('change', updateFov);
+}
+
+
 // Create meshes
 const meshes = new THREE.Group();
 const box1 = new THREE.BoxGeometry(1,1,1);
@@ -157,6 +185,7 @@ window.addEventListener('dblclick', () =>
 })
 
 // Device Orientation
+/*
 window.addEventListener("deviceorientation", handleOrientation, true);
 function handleOrientation(event) {
     const absolute = event.absolute;
@@ -173,3 +202,4 @@ function handleOrientation(event) {
     console.log(gamma);
     console.log(camera.rotation);
   }
+*/
