@@ -3,6 +3,7 @@ import { randFloat } from 'three/src/math/MathUtils.js';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 import gsap from 'gsap'
 import GUI from 'lil-gui'
+import { VRButton } from 'three/addons/webxr/VRButton.js';
 
 // Debugging GUI
 const gui = new GUI({
@@ -13,23 +14,36 @@ const gui = new GUI({
 gui.close();
 //gui.hide();
 
+// Setup
 const sizes = {
     width: window.innerWidth,
     height: window.innerHeight
 };
 
-
 const scene = new THREE.Scene();
 const canvas = document.querySelector('canvas.webgl');
+
 // Camera
 const camera = new THREE.PerspectiveCamera(75, sizes.width/sizes.height); //add camera with fov and aspect ratio
 camera.position.z = 3;
 scene.add(camera);
 
+// Render
+const renderer = new THREE.WebGLRenderer({
+    canvas: canvas
+})
+renderer.setSize(sizes.width, sizes.height);
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
 // AxesHelper
 const axesHelper = new THREE.AxesHelper(10);
 axesHelper.position.z = -5
 scene.add(axesHelper);
+
+// WebXR
+renderer.xr.enabled = true;
+document.body.appendChild(renderer.domElement);
+document.body.appendChild(VRButton.createButton(renderer));
 
 // Create meshes
 const meshes = new THREE.Group();
@@ -68,13 +82,6 @@ gui.add(debugObject, 'spin');
 const testFolder = gui.addFolder('Testing');
 testFolder.add(mesh, 'visible');
 //testFolder.close();
-
-// Render
-const renderer = new THREE.WebGLRenderer({
-    canvas: canvas
-})
-renderer.setSize(sizes.width, sizes.height);
-renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 
 // Animation
 const clock = new THREE.Clock();
@@ -146,3 +153,13 @@ window.addEventListener('dblclick', () =>
         document.exitFullscreen();
     }
 })
+
+async function start() {
+    // Check if browser supports WebXR with "immersive-ar".
+    const immersiveArSupported = await browserHasImmersiveArCompatibility();
+    
+    // Initialize app if supported.
+    immersiveArSupported ?
+      initializeXRApp() : 
+      displayUnsupportedBrowserMessage();
+  };
