@@ -51,6 +51,7 @@ document.body.appendChild(VRButton.createButton(renderer));
 // browsers that support WebXR regardless of the available hardware.
 let inlineSession = null;
 const fov = document.getElementById('vertFOV');
+renderer.xr.enabled = true;
 navigator.xr.requestSession('inline').then((session) => {
       inlineSession = session;
       //renderer.context.makeXRCompatible();
