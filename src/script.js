@@ -1,6 +1,7 @@
 import * as THREE from 'three'
 import { randFloat } from 'three/src/math/MathUtils.js';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
+import { DeviceOrientationControls } from './deviceOrientationControls';
 import gsap from 'gsap'
 import GUI from 'lil-gui'
 import { VRButton } from 'three/addons/webxr/VRButton.js';
@@ -46,35 +47,6 @@ renderer.xr.enabled = true;
 document.body.appendChild(renderer.domElement);
 document.body.appendChild(VRButton.createButton(renderer));
 */
-
-// Start up an inline session, which should always be supported on
-// browsers that support WebXR regardless of the available hardware.
-let inlineSession = null;
-const fov = document.getElementById('vertFOV');
-renderer.xr.enabled = true;
-navigator.xr.requestSession('inline').then((session) => {
-      inlineSession = session;
-      //renderer.context.makeXRCompatible();
-      const glLayer = new XRWebGLLayer(inlineSession, renderer.getContext());
-      inlineSession.updateRenderState({baseLayer: glLayer});
-      inlineSession.requestReferenceSpace('viewer');
-      updateFov();
-    });
-
-function updateFov() {
-    if (fov) {
-        let value = parseFloat(fov.value);
-    // The inlineVerticalFieldOfView is specified in radians.
-    let radValue = value * (Math.PI / 180);
-    inlineSession.updateRenderState({
-        inlineVerticalFieldOfView: radValue
-    });
-    }
-}
-if (fov) {
-    fov.addEventListener('change', updateFov);
-}
-
 
 // Create meshes
 const meshes = new THREE.Group();
@@ -129,7 +101,9 @@ const tick = () => {
 tick();
 */
 
-const controls = new OrbitControls(camera, canvas);
+
+//const controls = new OrbitControls(camera, canvas);
+const controls = new DeviceOrientationControls(camera);
 
 renderer.setAnimationLoop( animate );
 function animate() {
